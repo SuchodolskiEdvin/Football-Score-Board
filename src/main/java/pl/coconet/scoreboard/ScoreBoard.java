@@ -22,20 +22,39 @@ public class ScoreBoard {
 		matches.add(new Match(homeTeam, awayTeam));
 	}
 
-	public void finishGame(String homeTeam, String awayTeam) {
-		// TODO
+	public void updateScore(String homeTeam, String awayTeam, int homeScore, int awayScore) {
+		if (homeScore < 0 || awayScore < 0) {
+			throw new IllegalArgumentException("Scores must be non-negative.");
+		}
+
+		for (Match match : matches) {
+			if (match.getHomeTeam().equals(homeTeam) && match.getAwayTeam().equals(awayTeam)) {
+				match.updateScore(homeScore, awayScore);
+				return;
+			}
+		}
+		throw new NoSuchElementException("Match not found");
 	}
 
-	public void updateScore(String homeTeam, String awayTeam, int homeScore, int awayScore) {
-		// TODO
+	public void finishGame(String homeTeam, String awayTeam) {
+		boolean matchRemoved = matches.removeIf(match ->
+				match.getHomeTeam().equals(homeTeam) &&
+						match.getAwayTeam().equals(awayTeam)
+		);
+
+		if (!matchRemoved) {
+			throw new NoSuchElementException("Match not found.");
+		}
 	}
 
 	public List<String> getSummary() {
-		List<String> summary = new ArrayList<>();
-		for (Match match : matches) {
-			summary.add(match.toString());
-		}
-		return summary;
+		return matches.stream()
+				.sorted(Comparator
+						.comparingInt(Match::totalScore).reversed()
+						.thenComparing(Match::getStartTime, Comparator.reverseOrder()))
+				.map(Match::toString)
+				.toList();
 	}
+
 }
 

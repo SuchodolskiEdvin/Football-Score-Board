@@ -16,3 +16,6 @@ The application was implemented using **TDD principles** and thoroughly covered 
 - Java 17
 - Maven
 - JUnit 5
+
+# Assumptions
+ScoreBoard.updateScore() && ScoreBoard.finishGame() - HomeTeam and AwayTeam name and score will not be misplaced (swapped)
