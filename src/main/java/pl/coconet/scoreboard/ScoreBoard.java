@@ -7,6 +7,18 @@ public class ScoreBoard {
 	private final List<Match> matches = new ArrayList<>();
 
 	public void startGame(String homeTeam, String awayTeam) {
+		if (homeTeam == null || awayTeam == null || homeTeam.isBlank() || awayTeam.isBlank() || homeTeam.equals(awayTeam)) {
+			throw new IllegalArgumentException("Invalid team names");
+		}
+
+		// Check if match already exists
+		for (Match match : matches) {
+			if (match.getHomeTeam().equals(homeTeam) && match.getAwayTeam().equals(awayTeam) ||
+					match.getHomeTeam().equals(awayTeam) && match.getAwayTeam().equals(homeTeam)) {
+				throw new IllegalArgumentException("Match already started");
+			}
+		}
+
 		matches.add(new Match(homeTeam, awayTeam));
 	}
 
