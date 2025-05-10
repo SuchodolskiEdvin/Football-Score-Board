@@ -54,6 +54,39 @@ public class ScoreBoardTest {
 		);
 	}
 
+	@Test
+	void shouldHandleMultipleGamesAndSortByScore() {
+		ScoreBoard board = new ScoreBoard();
+
+		// Start and update games
+		board.startGame("Mexico", "Canada");
+		board.updateScore("Mexico", "Canada", 0, 5);
+
+		board.startGame("Spain", "Brazil");
+		board.updateScore("Spain", "Brazil", 10, 2);
+
+		board.startGame("Germany", "France");
+		board.updateScore("Germany", "France", 2, 2);
+
+		board.startGame("Uruguay", "Italy");
+		board.updateScore("Uruguay", "Italy", 6, 6);
+
+		board.startGame("Argentina", "Australia");
+		board.updateScore("Argentina", "Australia", 3, 1);
+
+		// Get the summary and check the sorting order
+		List<String> summary = board.getSummary();
+
+		// Assert correct order by total score, and recency
+		assertEquals(5, summary.size());
+		assertEquals("Uruguay 6 - Italy 6", summary.get(0));
+		assertEquals("Spain 10 - Brazil 2", summary.get(1));
+		assertEquals("Mexico 0 - Canada 5", summary.get(2));
+		assertEquals("Argentina 3 - Australia 1", summary.get(3));
+		assertEquals("Germany 2 - France 2", summary.get(4));
+	}
+
+
 	// ScoreBoard.updateScore() TESTS ------------------------------------------------------------------------------
 
 	@Test
@@ -91,6 +124,21 @@ public class ScoreBoardTest {
 	}
 
 	// ScoreBoard.finishGame() TESTS -------------------------------------------------------------------------------
+
+	@Test
+	void shouldRemoveFinishedGame() {
+		ScoreBoard board = new ScoreBoard();
+		board.startGame("Mexico", "Cadana");
+		board.updateScore("Mexico", "Cadana", 2, 1);
+
+		// Finish the game
+		board.finishGame("Mexico", "Cadana");
+
+		// Assert that the game is removed from the summary
+		List<String> summary = board.getSummary();
+		assertEquals(0, summary.size());
+	}
+
 
 	// ScoreBoard.getSummary() TESTS -------------------------------------------------------------------------------
 
