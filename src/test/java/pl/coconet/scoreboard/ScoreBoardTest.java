@@ -128,18 +128,26 @@ public class ScoreBoardTest {
 	@Test
 	void shouldRemoveFinishedGame() {
 		ScoreBoard board = new ScoreBoard();
-		board.startGame("Mexico", "Cadana");
-		board.updateScore("Mexico", "Cadana", 2, 1);
+		board.startGame("Mexico", "Canada");
+		board.updateScore("Mexico", "Canada", 2, 1);
 
 		// Finish the game
-		board.finishGame("Mexico", "Cadana");
+		board.finishGame("Mexico", "Canada");
 
 		// Assert that the game is removed from the summary
 		List<String> summary = board.getSummary();
 		assertEquals(0, summary.size());
 	}
 
+	@Test
+	void shouldThrowWhenFinishingNonExistentMatch() {
+		ScoreBoard board = new ScoreBoard();
+		board.startGame("Mexico", "Canada");
 
-	// ScoreBoard.getSummary() TESTS -------------------------------------------------------------------------------
+		// Try finishing a non-existent match (different teams)
+		assertThrows(NoSuchElementException.class, () ->
+				board.finishGame("Poland", "Lithuania")
+		);
+	}
 
 }
